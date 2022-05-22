@@ -20,10 +20,10 @@ create table `DB2022_user`(
 # 할 줄 아시는 분 도와주시면 감사하겠습니다!
 # group 변수명때문에 오류 났던 것 같음 -> gp로 수정
 create table `DB2022_idol`(
-	`id` bigint not null auto_increment primary key,
 	`gp` varchar(45) not null,
     `member` varchar(45) not null,
     `quantity` BIGINT
+	
 );
 
 # 아이돌에 아이디
