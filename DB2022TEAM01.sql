@@ -3,9 +3,8 @@ create database DB2022Team01;
 use DB2022Team01;
 
 
-
 # db 유저 생성 + 권한 부여
-create user 'DB2022Team01'@localhost identified by 'DB2022Team01';
+# create user 'DB2022Team01'@localhost identified by 'DB2022Team01';
 grant all privileges on DB2022Team01.* to 'DB2022Team01'@localhost;
 
 # 테이블 생성
@@ -20,11 +19,29 @@ create table `DB2022_user`(
 # 할 줄 아시는 분 도와주시면 감사하겠습니다!
 # group 변수명때문에 오류 났던 것 같음 -> gp로 수정
 create table `DB2022_idol`(
+	`idol_id` bigint not null auto_increment,
 	`gp` varchar(45) not null,
     `member` varchar(45) not null,
-    `quantity` BIGINT
-	
+    primary key(idol_id)
 );
+
+
+
+insert into DB2022_user(name, password)
+values
+	("선의", "1234"),
+    ("지원", "4321");
+
+
+INSERT INTO DB2022_idol(gp, member)
+values
+("세븐틴", "에스쿱스"),
+("세븐틴", "정한"),
+("세븐틴", "조슈아"),
+("세븐틴", "준"),
+("세븐틴", "호시")
+;
+
 
 # 아이돌에 아이디
 create table `DB2022_product`(
@@ -32,16 +49,22 @@ create table `DB2022_product`(
     `name` varchar(45),
     `price` BIGINT,
     `seller` varchar(45),
-    `category` varchar(45),
+    `category` varchar(255),
     `idol_id` bigint,
-    `idol_group` varchar(45),
-    `idol_member` varchar(45),
-    `isSold` bool,
+    `isSold` bool default false,
     `date` date,
-    foreign key(idol_id) references DB2022_idol(id),
-    foreign key(seller) references DB2022_user(name)
+    foreign key(idol_id) references DB2022_idol(idol_id),
+    foreign key(seller) references DB2022_user(name),
+    check((category) in ('포토카드', '앨범', '인형', '시즌그리팅', '공식키트', '폴라로이드', '포스터', '잡지', '기타'))
 );
 
+
+insert into DB2022_product(name, price, seller, category, idol_id, date)
+values
+("포카", 40000, "선의", "포토카드", 1, "2017-01-01");
+
+select name, price, seller, category, idol_id, isSold, date from DB2022_product;
+select * from DB2022_idol;
 
 
 create table `DB2022_trade` (
@@ -49,12 +72,13 @@ create table `DB2022_trade` (
     `product_id` bigint,
     `name` varchar(45),
     `price` bigint,
-    `seller` varchar(45),
     `buyer` varchar(45),
 	foreign key(product_id) references DB2022_product(id),
-    foreign key(seller) references DB2022_user(name),
     foreign key(buyer) references DB2022_user(name)
 );
+
+
+
 
 create table `DB2022_wishlist`(
     `user_id` bigint,

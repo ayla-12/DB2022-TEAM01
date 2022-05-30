@@ -1,5 +1,6 @@
 package DAO;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,6 +10,10 @@ public class DB2022TEAM01_UserDAO {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
+
+	DB2022TEAM01_LogInDAO logInFunc = new DB2022TEAM01_LogInDAO();
+
+
 	public DB2022TEAM01_UserDAO() {
 		try {			
 			String dbURL = DB2022TEAM01_ProductDAO.DB_URL;
@@ -20,17 +25,21 @@ public class DB2022TEAM01_UserDAO {
 			// TODO: handle exception\
 			e.printStackTrace();
 		}
-		
 	}
+
+
+
 	//실제로 로그인하는 함수.
 	public int login(String userID, String userPassword) {
-		String SQL = "SELECT password FROM DB2022_user WHERE name = ?";
+		String SQL = "SELECT id, password FROM DB2022_user WHERE name = ?";
+
 		try {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			rs = pstmt.executeQuery();	//rs에 쿼리문 실행 결과 넣기
 			if(rs.next()) {	//아이디 존재
 				if(rs.getString("password").contentEquals(userPassword)) {
+					logInFunc.convertUserLogIn(rs.getLong("id"));
 					return 1;	//로그인 성공
 				}
 				else {

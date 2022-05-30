@@ -1,31 +1,86 @@
-import java.awt.*;
+package GUI;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 
-public class DB2022TEAM01_TradeList extends JFrame{
+public class DB2022TEAM01_TradeList extends JFrame {
 
-	public DB2022TEAM01_TradeList() {
-		setTitle("¸¶ÀÌÆäÀÌÁö - °Å·¡ ³»¿ª");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		Container cp = getContentPane();
-		cp.setBackground(Color.WHITE);
-		
-		String header[] = {"»óÇ°¸í", "¾ÆÀÌµ¹ ±×·ì", "¸â¹ö¸í", "Ä«Å×°í¸®", "¸ÅµµÀÚ", "°¡°İ"};
-		//db¿¡¼­ ºÒ·¯¿Ã ºÎºĞ
-		String contents[][] = {
-				{"´õº¸ÀÌÁî ÁÖ¿¬ ¾²¸±¶óÀÌµå ¹Ì°øÆ÷ ¾çµµ", "´õº¸ÀÌÁî", "ÁÖ¿¬", "Æ÷Ä«", "dagef", "3500"},
-				{"´õº¸ÀÌÁî ÇöÀç ÀÎÇü ´Ş°õ ÆÇ¸Å", "´õº¸ÀÌÁî", "ÇöÀç", "ÀÎÇü", "dlksjdf", "50000"}
-		};
-		JTable list = new JTable(contents,header);
-		JScrollPane scrollpane = new JScrollPane(list);
-		cp.add(scrollpane);
-		
-		setSize(1000, 700);
-		setVisible(true);
-	}
-	public static void main(String[] args) {
-		DB2022TEAM01_TradeList tradeList = new DB2022TEAM01_TradeList();
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/DB2022Team01";
+    static final String USER = "DB2022Team01";
+    static final String PASS = "DB2022Team01";
 
-	}
+    public Connection getConnection(){
+        Connection conn = null;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn= DriverManager.getConnection(DB_URL, USER, PASS);
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
+        return conn;
+    }
+
+    private PreparedStatement ps;
+    private ResultSet rs;
+
+    public DB2022TEAM01_TradeList() {
+        JFrame frame = new JFrame("ê±°ë˜ ë‚´ì—­");
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("ê±°ë˜ ë‚´ì—­");
+        JButton bt1 = new JButton("ì°œ");
+        JButton bt2 = new JButton("ë§¤ìˆ˜");
+
+        Font font = new Font("ë§‘ì€ ê³ ë”•", Font.BOLD, 20);
+
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setFont(font);
+
+        String col[] = { "ìƒí’ˆëª…", "ì•„ì´ëŒ ê·¸ë£¹", "ë©¤ë²„ëª…", "ì¹´í…Œê³ ë¦¬", "ë§¤ë„ì ID", "ë§¤ìˆ˜ì ID", "ê°€ê²©", "ë§¤ìˆ˜" };
+
+        DefaultTableModel model = new DefaultTableModel(col, 0);
+
+
+        Connection conn = getConnection();
+
+        JTable table = new JTable(model);
+        table.setRowHeight(30);
+
+        table.setPreferredScrollableViewportSize(new Dimension (950, 650));
+        table.setBackground(Color.pink);
+
+        JButton home = DB2022TEAM01_Main.make_home();
+        home.setBounds(950, 5, 30, 30);
+        panel.add(home);
+
+        //í™ˆë²„íŠ¼
+        home.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                frame.dispose();
+                new DB2022TEAM01_Main();
+            }
+        });
+
+        JScrollPane pane = new JScrollPane(table);
+        panel.setLayout(new BorderLayout(10, 10));
+        panel.add(pane, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.NORTH);
+        frame.add(panel);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1000, 700);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);	//í™”ë©´ ì¤‘ì•™ì— ëœ¸
+        frame.setVisible(true);
+
+    }
+
 
 }

@@ -2,60 +2,49 @@ package DTO;
 
 public class DB2022TEAM01_ProductDTO {
 
+    private Long userId;
     private String name;
-    private String price;
+    private Long price;
     private String seller;
     private String category;
-    private String date;
+    private String IdolGroup;
+    private String IdolMember;
+
+    public Long getUserId() {
+        return userId;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPrice() {
+    public Long getPrice() {
         return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
     }
 
     public String getSeller() {
         return seller;
     }
 
-    public void setSeller(String seller) {
-        this.seller = seller;
-    }
-
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public String getIdolGroup() {
+        return IdolGroup;
+    }
+
+    public String getIdolMember() {
+        return IdolMember;
+    }
+
+    public DB2022TEAM01_ProductDTO(Long userId, String name, Long price, String seller, String category, String idolGroup, String idolMember) {
+        this.userId = userId;
+        this.name = name;
+        this.price = price;
+        this.seller = seller;
         this.category = category;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return "DB2022TEAM01_ProductDTO{" +
-                "name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                ", seller='" + seller + '\'' +
-                ", category='" + category + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        IdolGroup = idolGroup;
+        IdolMember = idolMember;
     }
 }

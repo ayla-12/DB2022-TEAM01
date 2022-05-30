@@ -1,3 +1,5 @@
+/*
+
 import java.sql.*;
 import java.util.Scanner;
 public class DBProject_idolSQL {
@@ -26,13 +28,13 @@ public class DBProject_idolSQL {
         	stmt = connection.createStatement();
             rSet = stmt.executeQuery("select * from `DB2022_idol`");
            
-            //dbÁßº¹ È®ÀÎ
+            //dbï¿½ßºï¿½ È®ï¿½ï¿½
             while(rSet.next()){
                if(group.equals(rSet.getString("group")) &&  mem.equals(rSet.getString("member")))
             	   i = 1;
             }
             
-            //db¿¡ Áßº¹ÀÌ ¾øÀ¸¹Ç·Î µî·Ï
+            //dbï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½
             if(i == 0) {
             	pStmt = connection.prepareStatement("insert into `DB2022_idol` values (?, ?, ?)");
             	pStmt.setString(1, group);
@@ -57,3 +59,4 @@ public class DBProject_idolSQL {
     
 
 
+*/

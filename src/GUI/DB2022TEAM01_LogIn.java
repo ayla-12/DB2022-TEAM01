@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import DAO.DB2022TEAM01_UserDAO;
 
+
 public class DB2022TEAM01_LogIn extends JFrame{
 	public DB2022TEAM01_LogIn() {
 		setTitle("로그인");
@@ -63,6 +64,7 @@ public class DB2022TEAM01_LogIn extends JFrame{
 		
 		contentPane.add(login);
 		contentPane.add(signup);
+
 		
 		//login 버튼 클릭
 		login.addActionListener(new ActionListener() {
@@ -72,9 +74,10 @@ public class DB2022TEAM01_LogIn extends JFrame{
 				String id_value = id_field.getText();
 				String pw_value = new String(pw_field.getPassword());
 				DB2022TEAM01_UserDAO user_login = new DB2022TEAM01_UserDAO();
+
 				if(user_login.login(id_value, pw_value)==1) {	//로그인 성공
-					//임시로
-					JOptionPane.showMessageDialog(DB2022TEAM01_LogIn.this, "로그인 성공!", "Message", JOptionPane.PLAIN_MESSAGE);
+					dispose();
+					new DB2022TEAM01_Main();
 				}
 				else if(user_login.login(id_value, pw_value)==0) {	//비밀번호 틀림
 					JOptionPane.showMessageDialog(DB2022TEAM01_LogIn.this, "비밀번호가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
@@ -100,13 +103,11 @@ public class DB2022TEAM01_LogIn extends JFrame{
 		setResizable(false);
 		setLocationRelativeTo(null);	//화면 중앙에 뜸
 		setVisible(true);
-	}
-	
-		
-	public static void main(String[] args) {
-		DB2022TEAM01_LogIn logIn = new DB2022TEAM01_LogIn();
-		
-	}
-	
+
+
+
+
+
+	}	
 	
 }
