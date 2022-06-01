@@ -2,6 +2,7 @@ package GUI;
 
 import DAO.DB2022TEAM01_LogInDAO;
 import DAO.DB2022TEAM01_ProductDAO;
+import DAO.DB2022TEAM01_SearchDAO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,7 +12,8 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.Vector;
 
-public class DB2022TEAM01_WishList extends JFrame {
+public class DB2022TEAM01_SearchView {
+
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/DB2022Team01";
     static final String USER = "DB2022Team01";
@@ -33,14 +35,14 @@ public class DB2022TEAM01_WishList extends JFrame {
     private PreparedStatement ps;
     private ResultSet rs;
 
-    public DB2022TEAM01_WishList() {
-        JFrame frame = new JFrame("위시리스트");
+    public DB2022TEAM01_SearchView(String gp, String member, String keyword, String category){
+        JFrame frame = new JFrame("검색 결과");
         Container contentPane = frame.getContentPane();
-        
+
         contentPane.setBackground(Color.white);
-		contentPane.setLayout(null);
-		
-        JLabel label = new JLabel("위시리스트");        
+        contentPane.setLayout(null);
+
+        JLabel label = new JLabel("검색 결과");
 
         Font font = new Font("맑은 고딕", Font.BOLD, 20);
 
@@ -50,29 +52,40 @@ public class DB2022TEAM01_WishList extends JFrame {
         label.setFont(font);
         contentPane.add(label);
 
-        String col[] = { "상품 ID", "상품명", "아이돌 그룹", "멤버명", "카테고리", "판매자", "가격" };
+        String col[] = { "상품 ID", "상품명", "아이돌 그룹", "멤버명", "카테고리", "가격" };
 
         DefaultTableModel model = new DefaultTableModel(col, 0);
         Long userId = loginfunc.getLogInUser();
 
 
+
         Connection conn = getConnection();
 
-        String SQL = "select id, name, gp, member, category, seller, price, date\n" +
-                "from DB2022_product, DB2022_wishlist, DB2022_idol\n" +
-                "where DB2022_wishlist.user_id = ? and DB2022_wishlist.product_id = DB2022_product.id and DB2022_product.idol_id = DB2022_idol.idol_id " +
-                "order by date;\n";
+
         try{
+            String SQL = "select id, name, gp, member, category, price from DB2022_product, DB2022_idol \n" +
+                    "where DB2022_product.idol_id = ? and DB2022_idol.idol_id = DB2022_product.idol_id " +
+                    "and category = ? and name like ? " +
+                    "order by date";
+
             ps = conn.prepareStatement(SQL);
-            ps.setLong(1, userId);
+            DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
+            Long idolId = dao.FindIdol(gp, member);
+            ps.setLong(1, idolId);
+
+            ps.setString(2, category);
+
+            String searchInput = "%" + keyword + "%";
+            ps.setString(3, searchInput);
+
             rs = ps.executeQuery();
             int row = 1;
             while(rs.next()){
                 Vector record = new Vector();
                 row++;
                 //상품 id
-				record.add(rs.getInt("id"));
-				
+                record.add(rs.getInt("id"));
+
                 // 샹품명
                 record.add(rs.getString("name"));
 
@@ -84,9 +97,6 @@ public class DB2022TEAM01_WishList extends JFrame {
 
                 // 카테고리
                 record.add(rs.getString("category"));
-
-                // 판매자
-                record.add(rs.getString("seller"));
 
                 // 가격
                 record.add(rs.getLong("price"));
@@ -103,15 +113,10 @@ public class DB2022TEAM01_WishList extends JFrame {
         table.setPreferredScrollableViewportSize(new Dimension (950, 650));
         table.setBackground(Color.pink);
         
-        //홈버튼 추가
-        JButton home = DB2022TEAM01_Main.make_home();
-        home.setBounds(950, 5, 30, 30);
-        contentPane.add(home);
-
-        //찜 해제, 매수하기
+      //찜, 매수하기
         JLabel idInput_label = new JLabel("상품 ID:");
         JTextField idInput = new JTextField(10);
-        JButton bt1 = new JButton("찜 해제");
+        JButton bt1 = new JButton("찜");
         JButton bt2 = new JButton("구매");
         
         Font font2 = new Font("맑은 고딕", Font.BOLD, 15);
@@ -128,15 +133,48 @@ public class DB2022TEAM01_WishList extends JFrame {
         
         idInput_label.setBounds(298, 600, 58, 20);
         idInput.setBounds(369, 600, 178, 26);
-        bt1.setBounds(567, 600, 75, 26);
-        bt2.setBounds(653, 600, 60, 26);
+        bt1.setBounds(567, 600, 45, 26);
+        bt2.setBounds(621, 600, 60, 26);
+        
+        //찜 버튼 눌렀을 때
+        bt1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
+				Long productId = Long.parseLong(idInput.getText());
+				dao.addWishlist(productId);
+				new PopUp1();
+				//여기에 위시리스트에 추가하는 코드
+			}
+		});
+        
+        //매수 버튼 눌렀을 때
+        bt2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
+				Long productId = Long.parseLong(idInput.getText());
+				dao.buyProduct(productId);
+				new PopUp2();
+				//여기에 구매 처리하는 코드
+			}
+		});
         
         contentPane.add(idInput_label);
         contentPane.add(idInput);
         contentPane.add(bt1);
         contentPane.add(bt2);
-        
-                
+
+        //홈버튼 추가
+        JButton home = DB2022TEAM01_Main.make_home();
+        home.setBounds(950, 5, 30, 30);
+        contentPane.add(home);
+
+
         //홈버튼
         home.addActionListener(new ActionListener() {
 
@@ -147,31 +185,11 @@ public class DB2022TEAM01_WishList extends JFrame {
                 new DB2022TEAM01_Main();
             }
         });
-        //찜 해제 버튼
-        bt1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Long productId = Long.parseLong(idInput.getText());
-                DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
-                dao.deleteWishList(productId);
-                new PopUp3();
-            }
-        });
-        //구매 버튼
-        bt2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Long productId = Long.parseLong(idInput.getText());
-                DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
-                dao.deleteWishList(productId);
-                dao.buyProduct(productId);
-                new PopUp2();
-            }
-        });
+
 
         JScrollPane pane = new JScrollPane(table);
         pane.setBounds(0, 60, 988, 510);
-        contentPane.add(pane);        
+        contentPane.add(pane);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 700);
@@ -179,7 +197,6 @@ public class DB2022TEAM01_WishList extends JFrame {
         frame.setLocationRelativeTo(null);	//화면 중앙에 뜸
         frame.setVisible(true);
 
-
     }
-    
+
 }

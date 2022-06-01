@@ -44,7 +44,7 @@ public class DB2022TEAM01_LogInDAO {
     public Long getLogInUser(){
         Connection conn = getConnection();
         Long userId = Long.valueOf(0);
-        String SQL = "select * from DB2022_user where login = 1";
+        String SQL = "select * from DB2022_user use index(idx_user_login) where login = 1";
         try{
             ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
@@ -63,7 +63,7 @@ public class DB2022TEAM01_LogInDAO {
     public String getLogInUserName(Long userId){
         String userName = " ";
         Connection conn = getConnection();
-        String SQL = "select name from DB2022_user where id = ?";
+        String SQL = "select name from DB2022_user use index(idx_user) where id = ?";
         try{
             ps = conn.prepareStatement(SQL);
             ps.setLong(1, userId);

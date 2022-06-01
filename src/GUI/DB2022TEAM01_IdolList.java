@@ -1,20 +1,28 @@
 package GUI;
 
-import DAO.DB2022TEAM01_LogInDAO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
-import java.util.Vector;
 
-public class DB2022TEAM01_TradeList extends JFrame {
+import DAO.DB2022TEAM01_LogInDAO;
+import DAO.DB2022TEAM01_ProductDAO;
 
-    DB2022TEAM01_LogInDAO logInFunc = new DB2022TEAM01_LogInDAO();
-
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+public class DB2022TEAM01_IdolList extends JFrame{
+	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/DB2022Team01";
     static final String USER = "DB2022Team01";
     static final String PASS = "DB2022Team01";
@@ -30,60 +38,43 @@ public class DB2022TEAM01_TradeList extends JFrame {
         return conn;
     }
 
+    DB2022TEAM01_LogInDAO loginfunc = new DB2022TEAM01_LogInDAO();
+    DB2022TEAM01_ProductDAO dao = new DB2022TEAM01_ProductDAO();
+    
     private PreparedStatement ps;
     private ResultSet rs;
-
-    public DB2022TEAM01_TradeList() {
-        JFrame frame = new JFrame("거래 내역");
+	
+	public DB2022TEAM01_IdolList() {		
+		
+		JFrame frame = new JFrame("아이돌 목록");
         JPanel panel = new JPanel();
-        JLabel label = new JLabel("거래 내역");
-        JButton bt1 = new JButton("찜");
-        JButton bt2 = new JButton("매수");
-
+        JLabel label = new JLabel("아이돌 목록");
+        
         Font font = new Font("맑은 고딕", Font.BOLD, 20);
 
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setFont(font);
 
-        String col[] = { "번호","상품명", "아이돌 그룹", "멤버명", "카테고리", "매도자 ID", "매수자 ID", "가격"};
+        String col[] = { "아이돌 그룹", "멤버명" };
 
         DefaultTableModel model = new DefaultTableModel(col, 0);
 
        Connection conn = getConnection();
 
-        String SQL = "select distinct id, name, user_id, DB2022_product.idol_id, gp, member, price, seller, buyer_id, category\n" +
-                "from DB2022_product, DB2022_trade, DB2022_idol\n" +
-                "where (DB2022_product.user_id = ? or DB2022_trade.buyer_id = ?) and DB2022_idol.idol_id = DB2022_product.idol_id " +
-                "order by date;";
+        String SQL = "select gp, member\n" +
+                "from DB2022_idol;";
 
-        Long userId= logInFunc.getLogInUser();
+        Long userId= loginfunc.getLogInUser();
 
         try{
-            ps = conn.prepareStatement(SQL);
-            ps.setLong(1, userId);
-            ps.setLong(2, userId);
+            ps = conn.prepareStatement(SQL);            
             rs = ps.executeQuery();
 
             while(rs.next()){
                 Vector record = new Vector();
-                record.add(rs.getLong("id"));
-                record.add(rs.getString("name"));
+                
                 record.add(rs.getString("gp"));
-                record.add(rs.getString("member"));
-                record.add(rs.getString("category"));
-                record.add(rs.getString("seller"));
-
-
-                Long buyerId = rs.getLong("buyer_id");
-                if(buyerId != null){
-                    String  buyerName = logInFunc.getLogInUserName(buyerId);
-                    record.add(buyerName);
-                }
-                else{
-                    record.add(" ");
-                }
-
-                record.add(rs.getLong("price"));
+                record.add(rs.getString("member"));             
 
                 model.addRow(record);
             }
@@ -126,8 +117,6 @@ public class DB2022TEAM01_TradeList extends JFrame {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);	//화면 중앙에 뜸
         frame.setVisible(true);
-
-    }
-
-
+	}
+	
 }
