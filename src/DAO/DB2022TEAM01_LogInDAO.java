@@ -2,9 +2,9 @@ package DAO;
 
 import java.sql.*;
 
-// 유저의 로그인 상태를 관리하는 함수
+// 유저의 로그인 상태를 관리하는 클래스
 public class DB2022TEAM01_LogInDAO {
-
+	//데이터베이스 연결
     private PreparedStatement ps;
     private ResultSet rs;
 
@@ -27,7 +27,7 @@ public class DB2022TEAM01_LogInDAO {
     // 로그인 페이지에서 로그인 성공 시 login 컬럼의 값을 true로 바꾼다
     public boolean convertUserLogIn(Long userID){
         Connection conn = getConnection();
-        String SQL = "update DB2022_user set login = true where id = ?";
+        String SQL = "update DB2022_user set login = true where id = ?";	//update
         try{
             ps = conn.prepareStatement(SQL);
             ps.setLong(1, userID);
@@ -44,7 +44,7 @@ public class DB2022TEAM01_LogInDAO {
     public Long getLogInUser(){
         Connection conn = getConnection();
         Long userId = Long.valueOf(0);
-        String SQL = "select * from DB2022_user use index(idx_user_login) where login = 1";
+        String SQL = "select * from DB2022_user use index(idx_user_login) where login = 1";	//index 사용
         try{
             ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();

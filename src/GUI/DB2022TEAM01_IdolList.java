@@ -61,8 +61,8 @@ public class DB2022TEAM01_IdolList extends JFrame{
 
        Connection conn = getConnection();
 
-        String SQL = "select gp, member\n" +
-                "from DB2022_idol;";
+        String SQL = "select *" +
+                "from DB2022_idol_list;";
 
         Long userId= loginfunc.getLogInUser();
 
@@ -89,7 +89,7 @@ public class DB2022TEAM01_IdolList extends JFrame{
         table.setRowHeight(30);
 
         table.setPreferredScrollableViewportSize(new Dimension (950, 650));
-        table.setBackground(Color.pink);
+        table.setBackground(new Color(0xFFEBCD));
 
         JButton home = DB2022TEAM01_Main.make_home();
         home.setBounds(950, 5, 30, 30);

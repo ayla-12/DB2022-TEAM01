@@ -13,7 +13,7 @@ import javax.swing.*;
 import DAO.DB2022TEAM01_ProductDAO;
 import DAO.DB2022TEAM01_SearchDAO;
 
-//지원 작업
+
 public class DB2022TEAM01_Search extends JFrame{
 	private String [] categories = {"포토카드", "앨범", "인형", "시즌그리팅", "공식키트", "폴라로이드", "포스터", "잡지", "기타"};
 	private String group_info = "*아이돌 그룹";
@@ -92,7 +92,7 @@ public class DB2022TEAM01_Search extends JFrame{
 		contentPane.add(search_btn);
 		contentPane.add(home);
 		
-		search_btn.addActionListener(new ActionListener() {
+		search_btn.addActionListener(new ActionListener() {	//검색 버튼 클릭
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -100,8 +100,11 @@ public class DB2022TEAM01_Search extends JFrame{
 				String idol_mem = member.getText();
 				String keyword_str = keyword.getText();
 				String category_str = category.getSelectedItem().toString();
-				if(idol_group.isBlank() || idol_group.equals(group_info) || idol_mem.isBlank() || idol_mem.equals(mem_info) || keyword_str.equals(key_info)) {
-					JOptionPane.showMessageDialog(DB2022TEAM01_Search.this, "아이돌 그룹과 멤버명을 입력해야 합니다. 키워드가 없다면 빈칸으로 채우세요.", "Message", JOptionPane.ERROR_MESSAGE);
+				if(keyword_str.equals(key_info)){
+					keyword_str = "";
+				}
+				if(idol_group.isBlank() || idol_group.equals(group_info) || idol_mem.isBlank() || idol_mem.equals(mem_info)) {	//필수 입력 사항 입력 안했을 때
+					JOptionPane.showMessageDialog(DB2022TEAM01_Search.this, "아이돌 그룹과 멤버명을 입력해야 합니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 					//상품상세페이지 보여줌.
@@ -133,7 +136,7 @@ public class DB2022TEAM01_Search extends JFrame{
 	}
 	
 	//focuslistener
-	class MyFocusListener implements FocusListener{
+	class MyFocusListener implements FocusListener{	//입력란 클릭시 전체 선택 -> 클릭하면 기존에 존재하던 글자가 모두 선택되어 바로 키보드 입력 받을 수 있게 함.
 		@Override
 		public void focusGained(FocusEvent e) {
 			// TODO Auto-generated method stub

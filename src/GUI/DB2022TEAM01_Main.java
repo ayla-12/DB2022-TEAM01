@@ -95,7 +95,7 @@ public class DB2022TEAM01_Main extends JFrame{
 				new DB2022TEAM01_ProductRegister();
 			}
 		});
-		
+		//상품 상세 버튼
 		btn2.addActionListener(new ActionListener() {
 			
 			@Override
@@ -105,7 +105,7 @@ public class DB2022TEAM01_Main extends JFrame{
 				new DB2022TEAM01_ProductDetail();
 			}
 		});
-		
+		//검색 버튼
 		btn3.addActionListener(new ActionListener() {
 			
 			@Override
@@ -115,7 +115,7 @@ public class DB2022TEAM01_Main extends JFrame{
 				new DB2022TEAM01_Search();
 			}
 		});
-		
+		//마이페이지-위시리스트 버튼
 		btn4.addActionListener(new ActionListener() {
 			
 			@Override
@@ -126,7 +126,7 @@ public class DB2022TEAM01_Main extends JFrame{
 			}
 		});
 		
-
+		//거래내역 버튼
 		btn5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -134,7 +134,7 @@ public class DB2022TEAM01_Main extends JFrame{
 				new DB2022TEAM01_TradeList();
 			}
 		});
-		
+		//아이돌 리스트 버튼
 		btn6.addActionListener(new ActionListener() {
 			
 			@Override
@@ -150,7 +150,7 @@ public class DB2022TEAM01_Main extends JFrame{
 		setLocationRelativeTo(null);	//화면 중앙에 뜸
 		setVisible(true);
 	}
-	
+	//홈 버튼 만드는 함수
 	public static JButton make_home() {
 		ImageIcon icon = new ImageIcon("home.png");
 		Image img = icon.getImage();
@@ -159,7 +159,7 @@ public class DB2022TEAM01_Main extends JFrame{
 		JButton home_btn = new JButton(home);
 		home_btn.setBackground(Color.white);
 		home_btn.setFocusPainted(false);
-		
+		home_btn.setToolTipText("홈");
 		return home_btn;
 	}
 }

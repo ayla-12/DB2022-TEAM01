@@ -51,16 +51,17 @@ public class DB2022TEAM01_TradeList extends JFrame {
 
        Connection conn = getConnection();
 
-        String SQL = "select distinct id, name, user_id, DB2022_product.idol_id, gp, member, price, seller, buyer_id, category\n" +
-                "from DB2022_product, DB2022_trade, DB2022_idol\n" +
-                "where (DB2022_product.user_id = ? or DB2022_trade.buyer_id = ?) and DB2022_idol.idol_id = DB2022_product.idol_id " +
-                "order by date;";
+        String SQL = "select id, name, idol_id, gp, member, price, seller, category, buyer_id\n" +
+                "from DB2022_product_withidol left outer join DB2022_trade\n" +
+                "on id = DB2022_trade.product_id\n" +
+                "where seller = ? or buyer_id = ?;";
 
         Long userId= logInFunc.getLogInUser();
+        String username = logInFunc.getLogInUserName(userId);
 
         try{
             ps = conn.prepareStatement(SQL);
-            ps.setLong(1, userId);
+            ps.setString(1, username);
             ps.setLong(2, userId);
             rs = ps.executeQuery();
 

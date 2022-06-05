@@ -36,6 +36,8 @@ public class DB2022TEAM01_UserDAO {
 		try {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
+
+
 			rs = pstmt.executeQuery();	//rs에 쿼리문 실행 결과 넣기
 			if(rs.next()) {	//아이디 존재
 				if(rs.getString("password").contentEquals(userPassword)) {
@@ -60,12 +62,15 @@ public class DB2022TEAM01_UserDAO {
 		boolean approval = false;
 		String SQL = "INSERT INTO DB2022_user(name, password) VALUES(?,?)";
 		try {
+			conn.setAutoCommit(false);
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			pstmt.setString(2, userPassword);
 			int r = pstmt.executeUpdate();
 			if(r > 0){
                 System.out.println("가입 성공");
+				conn.commit();
+				pstmt.close();
                 approval = true;
             }else{
                 System.out.println("가입 실패");

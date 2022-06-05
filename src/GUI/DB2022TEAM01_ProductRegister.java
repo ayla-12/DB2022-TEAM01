@@ -29,9 +29,11 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
         JLabel title = new JLabel("상품 등록");
 
         Font basic = new Font("맑은 고딕", Font.BOLD, 30);
+        Font info_f = new Font("맑은 고딕", Font.PLAIN, 15);
 
         c.setBackground(Color.white);
-
+        
+        JLabel info = new JLabel("*빈칸을 모두 채워주세요.");
         JLabel productName = new JLabel("상품명 ");
         JLabel IdolGroup = new JLabel("아이돌그룹 ");
         JLabel IdolMember = new JLabel("멤버명 ");
@@ -45,6 +47,7 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
         JComboBox<String> category = new JComboBox<String>(categories);
         JTextField priceInput = new JTextField(45);
 
+        info.setBounds(200, 75, 300, 20);
         productName.setBounds(200, 100, 300, 45);
         IdolGroup.setBounds(200, 180, 300, 45);
         IdolMember.setBounds(200, 260, 300, 45);
@@ -56,7 +59,8 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
         IdolMemberInput.setBounds(550, 260, 300, 45);
         category.setBounds(550, 340, 300, 45);
         priceInput.setBounds(550, 420, 300, 45);
-
+        
+        info.setFont(info_f);
         price.setFont(basic);
         productName.setFont(basic);
         IdolGroup.setFont(basic);
@@ -83,7 +87,7 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
         home.setBounds(950, 5, 30, 30);
         c.add(home);
 
-
+        c.add(info);
         c.add(productName);
         c.add(productNameInput);
         c.add(IdolGroup);
@@ -104,11 +108,6 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
                 System.out.println(userId);
                 String sellerName = logInFunc.getLogInUserName(userId);
                 System.out.println(sellerName);
-
-
-               // trade에도 등록
-                new DB2022TEAM01_TradeDAO().tradeRegister();
-                System.out.println(sellerName);                
                 
                 try {
                 	// gui에 입력된 값 가져오기
@@ -125,8 +124,10 @@ public class DB2022TEAM01_ProductRegister extends JFrame {
                     } else {
                     	//등록되었습니다 창
                         JOptionPane.showMessageDialog(DB2022TEAM01_ProductRegister.this, "등록되었습니다.", "Message", JOptionPane.PLAIN_MESSAGE);
-                    }                 
-                                        
+                    }
+
+                    System.out.println(sellerName);
+
                     productNameInput.setText(null);
                     IdolGroupInput.setText(null);
                     IdolMemberInput.setText(null);

@@ -51,14 +51,14 @@ public class DB2022TEAM01_TradeDAO {
     public Boolean tradeRegister(){
         Connection conn = getConnection();
 
-        String SQL = "insert into DB2022_trade(product_id) values (?);";
-        Long productId = tradeFind();
+        String SQL = "insert into DB2022_trade(product_id) value (?);";
 
         try{
             ps = conn.prepareStatement(SQL);
+            Long productId = tradeFind();
+            System.out.println(productId);
             ps.setLong(1, productId);
             ps.executeUpdate();
-
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -66,45 +66,5 @@ public class DB2022TEAM01_TradeDAO {
         return false;
     }
 
-    public Vector getTradeList(Long userId){
-        Vector record = new Vector();
-
-        String SQL = "select distinct trade_id, name, user_id, price, seller, buyer_id, date, isSold, category \n" +
-                "from DB2022_product, DB2022_trade \n" +
-                "where DB2022_product.user_id = ? or DB2022_trade.buyer_id = ?;\n";
-
-        try{
-            ps.setLong(1, userId);
-            ps.setLong(2, userId);
-            rs = ps.executeQuery();
-
-            while(rs.next()){
-                record.add(rs.getLong("trade_id"));
-                record.add(rs.getString("name"));
-                record.add(rs.getLong("price"));
-                record.add(rs.getString("seller"));
-
-                Long buyerId = rs.getLong("buyer_id");
-                String  buyerName = logInFunc.getLogInUserName(buyerId);
-                record.add(buyerName);
-
-                if(rs.getBoolean("isSold") == true){
-                    record.add("판매 완료");
-                }
-                else{
-                    record.add("구매 가능");
-                }
-
-                record.add(rs.getString("category"));
-
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        return record;
-    }
 
 }
